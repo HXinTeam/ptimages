@@ -29,6 +29,6 @@ jobs:
         run: |
           for image in ${{ env.images_list }}; do
             echo "Building and pushing $image"
-            docker build -t ${{ secrets.ALIYUN_REGISTRY }}/ptimages/$image:latest -f Dockerfile.$image .
-            docker push ${{ secrets.ALIYUN_REGISTRY }}/ptimages/$image:latest
+            docker build -t ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image -f Dockerfile.$image .
+            docker push ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image
           done
