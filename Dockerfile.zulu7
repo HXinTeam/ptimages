@@ -1,11 +1,12 @@
 FROM        --platform=$TARGETOS/$TARGETARCH azul/zulu-openjdk-alpine:7-latest
 
-RUN apk update \
-    && apk add --no-cache lsof curl ca-certificates openssl git tar sqlite fontconfig freetype tzdata iproute2 libstdc++ libc6-compat shadow \
-    && adduser -D -h /home/container container \
-    && echo "zh_CN.UTF-8 UTF-8" > /etc/locale.gen \
-    && apk add --no-cache glibc-i18n \
-    && /usr/glibc-compat/bin/localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
+LABEL       author="XJHya" maintainer="2012036686@qq.com"
+ENV         DEBIAN_FRONTEND noninteractive
+
+RUN 		apt-get update -y \
+            && apt-get install -y lsof curl ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 locales \
+            && useradd -m -d /home/container container \
+            && locale-gen zh_CN.UTF-8
 
 ENV         LC_ALL=zh_CN.UTF-8
 ENV         LANG=zh_CN.UTF-8
