@@ -1,0 +1,35 @@
+name: Build and Push Docker Images Manually For Free
+
+on:
+  workflow_dispatch:  # 手动触发
+    inputs:
+      images:  # 可选参数，用于指定镜像
+        description: "Comma-separated list of images to build (e.g., image1,image2)"
+        required: false
+        default: "image1,image2,image3"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Aliyun Container Registry
+        run: echo "${{ secrets.ALIYUN_PASSWORD }}" | docker login ${{ secrets.ALIYUN_REGISTRY }} -u ${{ secrets.ALIYUN_USERNAME }} --password-stdin
+
+      - name: Parse Input Images
+        id: parse
+        run: |
+          # 将输入的镜像名称分割为数组
+          images="${{ github.event.inputs.images }}"
+          echo "images_list=$(echo $images | tr ',' ' ')" >> $GITHUB_ENV
+
+      - name: Build and Push Docker Images
+        run: |
+          cd free
+          for image in ${{ env.images_list }}; do
+            echo "Building and pushing $image"
+            docker build -t ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image -f Dockerfile.$image .
+            docker push ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image
+          done
