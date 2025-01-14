@@ -1,4 +1,4 @@
-FROM        --platform=$TARGETOS/$TARGETARCH ibm-semeru-runtimes:open-17-jdk
+FROM        --platform=$TARGETOS/$TARGETARCH ibm-semeru-runtimes:open-17-jre
 
 LABEL       author="XJHya" maintainer="2012036686@qq.com"
 
