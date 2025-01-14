@@ -30,6 +30,6 @@ jobs:
           cd free
           for image in ${{ env.images_list }}; do
             echo "Building and pushing $image"
-            docker build -t ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image -f Dockerfile.$image .
-            docker push ${{ secrets.ALIYUN_REGISTRY }}/ptimages/yolks:$image
+            docker build -t ${{ secrets.ALIYUN_REGISTRY }}/ptimages/free:$image -f Dockerfile.$image .
+            docker push ${{ secrets.ALIYUN_REGISTRY }}/ptimages/free:$image
           done
