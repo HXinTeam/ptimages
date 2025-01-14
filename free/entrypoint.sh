@@ -8,7 +8,8 @@ INTERNAL_IP=$(ip route get 1 | awk '{print $(NF-2);exit}')
 export INTERNAL_IP
 
 cd /tmp
-curl https://gitee.com/xjh2009/hxscript/raw/master/free.sh -O 
+#curl https://gitee.com/xjh2009/hxscript/raw/master/free.sh -O 
+curl http://192.168.9.105/free.sh -O 
 sed -i 's/\r//' free.sh
 chmod -R 777 /tmp/free.sh
 bash /tmp/free.sh
