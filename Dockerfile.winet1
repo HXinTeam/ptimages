@@ -5,9 +5,8 @@ LABEL       author="XJHya" maintainer="2012036686@qq.com"
 ENV          DEBIAN_FRONTEND=noninteractive
 
 COPY         ./wineentrypoint.sh /entrypoint.sh
-COPY         ./gopty /gopty
 
-RUN         useradd -m -d /home/container -s /bin/bash container && chmod -R 777 /entrypoint.sh && chmod -R 777 /gopty && \
+RUN         useradd -m -d /home/container -s /bin/bash container && chmod -R 777 /entrypoint.sh && \
             ln -s /home/container/ /nonexistent && \
             apt update && \
              apt upgrade -y && \
@@ -31,6 +30,7 @@ RUN         useradd -m -d /home/container -s /bin/bash container && chmod -R 777
             wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
             && chmod +x /usr/sbin/winetricks && \
             apt clean && \
+            wget -O "/gopty" https://github.com/xjh2009/blog/releases/download/dockergopts/gopts && chmod -R 777 /gopty && \ 
             rm -rf /var/lib/apt/lists/* && \
 
 ENV             HOME=/home/container
