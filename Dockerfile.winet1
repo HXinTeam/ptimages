@@ -8,9 +8,7 @@ COPY         ./wineentrypoint.sh /entrypoint.sh
 
 RUN         useradd -m -d /home/container -s /bin/bash container && chmod -R 777 /entrypoint.sh && \
             ln -s /home/container/ /nonexistent && \
-            apt update && \
-             apt upgrade -y && \
-             apt install -y gcc g++ libgcc-12-dev libc++-dev gdb libc6 git wget curl tar zip unzip binutils xz-utils liblzo2-2 cabextract iproute2 net-tools netcat-traditional telnet libatomic1 libsdl1.2debian libsdl2-2.0-0 \
+             apt update && apt upgrade -y && apt install -y gcc g++ libgcc-12-dev libc++-dev gdb libc6 git wget curl tar zip unzip binutils xz-utils liblzo2-2 cabextract iproute2 net-tools netcat-traditional telnet libatomic1 libsdl1.2debian libsdl2-2.0-0 \
              libfontconfig1 icu-devtools libunwind8 libssl-dev sqlite3 libsqlite3-dev libmariadb-dev-compat libduktape207 locales ffmpeg gnupg2 apt-transport-https software-properties-common ca-certificates \
              liblua5.3-0 libz3-dev libzadc4 rapidjson-dev tzdata libevent-dev libzip4 libprotobuf32 libfluidsynth3 procps libstdc++6 tini && \
             if [ "$(uname -m)" = "x86_64" ]; then \
@@ -22,16 +20,16 @@ RUN         useradd -m -d /home/container -s /bin/bash container && chmod -R 777
             fi && \
             update-locale lang=en_US.UTF-8 \
             && dpkg-reconfigure --frontend noninteractive locales && \
-            dpkg --add-architecture i386 \
+            dpkg --add-architecture i386 && \
             mkdir -pm755 /etc/apt/keyrings && \
-            wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+            wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
             wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources && \
-            && apt install -y --no-install-recommends gnupg2 numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 winehq-stable cabextract wine-binfmt && \
+            apt install -y --no-install-recommends gnupg2 numactl tzdata software-properties-common libntlm0 winbind xvfb xauth python3 libncurses5:i386 libncurses6:i386 libsdl2-2.0-0 libsdl2-2.0-0:i386 winehq-stable cabextract wine-binfmt && \
             wget -q -O /usr/sbin/winetricks https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
             && chmod +x /usr/sbin/winetricks && \
             apt clean && \
             wget -O "/gopty" https://github.com/xjh2009/blog/releases/download/dockergopts/gopts && chmod -R 777 /gopty && \ 
-            rm -rf /var/lib/apt/lists/* && \
+            rm -rf /var/lib/apt/lists/*
 
 ENV             HOME=/home/container
 ENV             WINEPREFIX=/home/container/.wine
