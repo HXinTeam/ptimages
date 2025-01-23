@@ -1,17 +1,18 @@
-FROM alpine:latest
+FROM debian:bullseye-slim
 
-RUN apk update && apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     iptables \
+    socat \
     pptpd \
-    bash \
-    socat && \
-    echo "option /etc/ppp/options.pptpd\nlocalip 192.168.1.1\nremoteip 192.168.1.100-200" > /etc/pptpd.conf && \
-    echo "admin * admin *" > /etc/ppp/chap-secrets && \
-    echo "name pptpd\nmtu 1490\nmru 1490\nnodefaultroute\nproxyarp\nlock\nnobsdcomp\nmtu 1490" > /etc/ppp/options.pptpd && \
-    echo "#!/bin/bash\n\
-    service pptpd start\n\
-    socat TCP4-LISTEN:20171,fork SOCKS5:192.168.120.2:20171" > /start.sh && \
-    chmod +x /start.sh && \
-    rm -rf /var/cache/apk/*
-  
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "option /etc/ppp/options.pptpd\nlocalip 192.168.1.1\nremoteip 192.168.1.100-200" > /etc/pptpd.conf \
+    && echo "admin * admin *" > /etc/ppp/chap-secrets \
+    && echo "name pptpd\nmtu 1490\nmru 1490\nnodefaultroute\nproxyarp\nlock\nnobsdcomp\nmtu 1490" > /etc/ppp/options.pptpd \
+    && echo "#!/bin/bash\n\
+service pptpd start\n\
+socat TCP4-LISTEN:20170,fork SOCKS5:192.168.120.2:20170" > /start.sh \
+    && chmod +x /start.sh
+
+EXPOSE 1723
+
 CMD ["/start.sh"]
