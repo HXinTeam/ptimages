@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 # 安装必要的软件包
 RUN apt-get update && \
-    apt-get install -y pptpd ppp iptables net-tools wget iproute2 && \
+    apt-get install -y pptpd ppp iptables net-tools wget iproute2 unzip && \
     apt-get clean && \
     wget https://github.com/xjasonlyu/tun2socks/releases/download/v2.5.2/tun2socks-linux-amd64.zip -O tun2socks.zip && \
     unzip tun2socks.zip && \
