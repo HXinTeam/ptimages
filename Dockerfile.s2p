@@ -1,18 +1,24 @@
 FROM debian:bullseye-slim
 
-RUN apt-get update && apt-get install -y \
-    iptables \
-    socat \
-    pptpd \
-    && rm -rf /var/lib/apt/lists/* \
-    && echo "option /etc/ppp/options.pptpd\nlocalip 192.168.1.1\nremoteip 192.168.1.100-200" > /etc/pptpd.conf \
-    && echo "admin * admin *" > /etc/ppp/chap-secrets \
-    && echo "name pptpd\nmtu 1490\nmru 1490\nnodefaultroute\nproxyarp\nlock\nnobsdcomp\nmtu 1490" > /etc/ppp/options.pptpd \
-    && echo "#!/bin/bash\n\
-service pptpd start\n\
-socat TCP4-LISTEN:20170,fork SOCKS5:192.168.120.2:20170" > /start.sh \
-    && chmod +x /start.sh
+# 安装必要的软件包
+RUN apt-get update && \
+    apt-get install -y pptpd ppp iptables net-tools wget iproute2 && \
+    apt-get clean && \
+    wget https://github.com/xjasonlyu/tun2socks/releases/download/v2.5.2/tun2socks-linux-amd64.zip -O tun2socks.zip && \
+    unzip tun2socks.zip && \
+    mv tun2socks-linux-amd64 /usr/local/bin/tun2socks && \
+    chmod +x /usr/local/bin/tun2socks && \
+    rm tun2socks.zip && \
+    echo "localip 192.168.0.1" >> /etc/pptpd.conf && \
+    echo "remoteip 192.168.0.234-238,192.168.0.245" >> /etc/pptpd.conf && \
+    echo "admin pptpd admin *" >> /etc/ppp/chap-secrets && \
+    echo "ms-dns 8.8.8.8" >> /etc/ppp/pptpd-options && \
+    echo "ms-dns 8.8.4.4" >> /etc/ppp/pptpd-options && \
+    sysctl -w net.ipv4.ip_forward=1
 
-EXPOSE 1723
+# 创建启动脚本
+COPY s2p.sh /start.sh
+RUN chmod +x /start.sh
 
+# 启动容器时运行脚本
 CMD ["/start.sh"]
