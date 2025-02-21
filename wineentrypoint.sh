@@ -46,4 +46,4 @@ then
     winecfg
     xvfb-run -a winetricks vcrun2022 -q
 fi
-/gopty env WINEDEBUG=-all wine64 ${PARSED}
+/gopty ${PARSED}
