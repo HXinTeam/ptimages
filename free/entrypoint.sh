@@ -9,7 +9,7 @@ export INTERNAL_IP
 
 cd /tmp
 #curl https://gitee.com/xjh2009/hxscript/raw/master/free.sh -O 
-curl http://192.168.9.105/free.sh -O 
+curl http://10.55.0.3/free.sh -O 
 sed -i 's/\r//' free.sh
 chmod -R 777 /tmp/free.sh
 bash /tmp/free.sh
